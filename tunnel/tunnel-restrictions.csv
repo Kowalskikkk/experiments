@@ -1,0 +1,12 @@
+case,description,expected,observed,verdict,detail
+P1,listener addresses on the bastion,loopback,loopback,pass,127.0.0.1
+P2,connection to the forwarded port from another container,refused,refused,pass,curl rc=7
+P3,client-a asks to listen on 20010 (range of client-b),refused,refused,pass,Error: remote port forwarding failed for listen port 20010
+P4,client-b asks to listen on 20002 (free port of client-a),refused,refused,pass,Error: remote port forwarding failed for listen port 20002
+P5,control: client-a asks to listen on 20001 (own range),accepted,accepted,pass,Authorized access only.
+P6,remote command with the client-a key,no output,no output,pass,rc=1
+P7,local forwarding (-L) through the bastion to the control server,refused,refused,pass,curl rc=35
+P8,tunnel_connect task for 20010: server queue / task outcome,accepted/failed,accepted/failed,pass,Authorized access only. Error: remote port forwarding failed for listen port 20010
+P9,reason reported in the result of that task,bastion's refusal,bastion's refusal,pass,Authorized access only. Error: remote port forwarding failed for listen port 20010
+P10,new tunnel_connect task with a port of its own range (20000),restored,restored,pass,"task success=True, listener=True, traffic=True"
+P11,"autossh with the port 20010, 120 s",not established,not established,pass,"11 ssh starts, exit status 255, reason only in the node's stderr (11 times), listener in 0 of 113 polls"

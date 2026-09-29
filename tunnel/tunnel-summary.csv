@@ -1,0 +1,10 @@
+claim,chapters,cases,expected,observed,verdict,evidence
+forwarded listeners are bound to the loopback interface of the bastion,"2, 3","P1, P2",loopback only; unreachable from another container,loopback; refused,pass,listener address 127.0.0.1; curl rc=7 (7 = failed to connect)
+a client cannot listen on a port outside its own range (permitlisten),"2, 3","P3, P4, P5",refused; own port accepted,refused; own port accepted,pass,"bastion log: forward to 20002 denied 1 time(s), to 20010 13 time(s)"
+client accounts get no command output and no local forwarding,3,"P6, P7",no output; refused,no output; refused,pass,rc=1; bastion log: 1 refused local port forward
+every client login is confined to its chroot directory,3,all logins,chroot at every login,19 chroots for 19 logins,pass,bastion log: Accepted publickey and Changed root directory
+the control server checks only 1-65535; the client's range is enforced by the bastion,3,P8,"task queued, then failed",accepted/failed,pass,"server log: task created, claimed and ended with task_error"
+the separate channel reports why the tunnel failed,"1, 2",P9,reason given by the bastion in the task result,bastion's refusal,pass,"server log, error of the failed task: ""remote port forwarding failed for listen port 20010"""
+a new task corrects a cause local to the node,"2, 4",P10,tunnel restored and carrying traffic,restored,pass,"server log: next task claimed and succeeded; task success=True, listener=True, traffic=True"
+a local supervisor does not correct a wrong parameter,2,P11,never established,not established,pass,"autossh.log: 11 starts, exit status 255; reason only in the node's stderr (11); bastion denials for 20010: 13 = 11 (autossh) + P3 + P8"
+a terminated tunnel is restored through the control channel,"1, 2, 4",recovery,restored in every repetition,restored in 1/1,pass,tunnel-recovery.csv (listener and traffic by polling) and server log (claim and result of each task)

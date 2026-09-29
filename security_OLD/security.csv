@@ -1,0 +1,31 @@
+case,group,description,expected,observed,reason,verdict
+T1,T,valid agent token,200,200,,pass
+T2,T,"agent_id altered, original signature kept",401,401,invalid token,pass
+T3,T,"name altered, original signature kept",401,401,invalid token,pass
+T4,T,"role altered to admin, used on an admin route",401,401,invalid token,pass
+T5,T,unsigned token (alg none),401,401,invalid token,pass
+T6,T,signature made with another secret,401,401,invalid token,pass
+C1,C,control: correctly signed token built by the test,200,200,,pass
+C2,C,"correctly signed token, expired",401,401,invalid token,pass
+C3,C,"correct secret, unexpected algorithm HS512",401,401,invalid token,pass
+A1,A,first use of a signed challenge,200,200,,pass
+A2,A,replay of the same challenge and signature,401,401,invalid challenge,pass
+A3,A,challenge of exp-2 signed with the key of exp-1,401,401,invalid signature,pass
+A4,A,key id of exp-1 presented with the identity of exp-2,401,401,invalid key,pass
+R1,R,"session of a second key, before revocation",200,200,,pass
+R2,R,same session after that key is revoked,403,403,agent access revoked,pass
+R3,R,"session of the original key, unaffected",200,200,,pass
+R4,R,token of exp-5 after the agent is disabled,403,403,agent access revoked,pass
+R5,R,new challenge for the disabled exp-5,403,403,agent disabled,pass
+Z1,Z,exp-1 submits a result for a task of exp-5,404,404,task not found,pass
+R6,R,same token of exp-5 after the agent is enabled again,200,200,,pass
+Z2,Z,agent token on an administrative route,403,403,admin required,pass
+Z3,Z,administrative token on an agent route,403,403,agent token required,pass
+Z4,Z,agent route without any token,401,401,missing authorization,pass
+U1,U,"token of a second admin, account enabled",200,200,,pass
+U2,U,login of that account after it is disabled,401,401,invalid credentials,pass
+U3,U,token issued before the account was disabled,401/403,200,,FAIL
+V1,V,service outside the allowlist,400,400,invalid task args,pass
+V2,V,WireGuard interface other than wg0,400,400,invalid task args,pass
+V3,V,task type absent from the catalogue,400,400,unsupported task type,pass
+V4,V,tunnel port outside 1-65535,400,400,invalid task args,pass

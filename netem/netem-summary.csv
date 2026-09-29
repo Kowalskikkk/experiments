@@ -1,0 +1,7 @@
+condition,netem_each_direction,description,window_s,agents,cycles,cycles_rc0,heartbeats,heartbeat_rate,cycle_ms_mean,cycle_ms_median,cycle_ms_p95,cycle_ms_max,max_heartbeat_gap_s,agents_classified_offline,offline_snapshots,recovery_first_heartbeat_s_max,recovery_online_snapshot_s_max
+baseline,none,no degradation,602,5,50,50,50,1.0,120,120,128,137,64.4,0,0,53.6,
+delay50,delay 50ms,+50 ms each way (+100 ms RTT),600,5,45,45,45,1.0,1310,1310,1317,1321,65.5,0,0,39.5,
+loss1,loss 1%,1% loss each way,600,5,45,45,45,1.0,289,125,1133,1147,65.4,0,0,40.5,
+loss5,loss 5%,5% loss each way,600,5,45,45,45,1.0,780,345,2093,3954,68.2,0,0,41.3,
+delay50_loss5,delay 50ms loss 5%,+50 ms and 5% loss each way,600,5,45,45,45,1.0,2176,1886,3780,4855,67.6,0,0,39.7,
+loss20,loss 20%,stress: 20% loss each way,600,5,45,40,38,0.844,3892,3296,8325,11799,147.4,1,1,40.1,19.0
